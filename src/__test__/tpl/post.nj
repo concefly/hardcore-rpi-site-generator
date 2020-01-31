@@ -1,1 +1,5 @@
-{{ ctx | dump | safe }}
+<h1>{{ ctx.data.page.title }}</h1>
+
+<article>
+  {{ ctx.data.page.content | safe }}
+</article>
