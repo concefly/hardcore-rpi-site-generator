@@ -1,6 +1,10 @@
+import * as _ from 'lodash';
+import { BaseGenerator } from '../generator/BaseGenerator';
+
 export class RenderData {
   constructor(
-    readonly data: {
+    private readonly generator: BaseGenerator,
+    private readonly data: {
       site: {};
       page: {
         title: string;
@@ -8,4 +12,13 @@ export class RenderData {
       };
     }
   ) {}
+
+  toLocals() {
+    return _.cloneDeep({
+      ctx: {
+        type: this.generator.type,
+        data: this.data,
+      },
+    });
+  }
 }
