@@ -1,2 +1,1 @@
-# hardcore-rpi-runtime
-运行时
+![CI](https://github.com/concefly/hardcore-rpi-site-generator/workflows/CI/badge.svg?branch=master)
