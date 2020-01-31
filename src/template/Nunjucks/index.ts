@@ -6,7 +6,7 @@ export class NunjucksRender extends BaseTemplateRender {
 
   async render(data: any) {
     const content = await new Promise<string>((resolve, reject) => {
-      this.nunjucksEnv.render('index.html', data, (err, res) => {
+      this.nunjucksEnv.render('index.nj', data, (err, res) => {
         if (err) return reject(err);
         resolve(res);
       });
