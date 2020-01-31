@@ -1,4 +1,4 @@
-# Snapshot report for `src/parser/Markdown/__test__/util.test.ts`
+# Snapshot report for `src/page/Markdown/__test__/util.test.ts`
 
 The actual snapshot is saved in `util.test.ts.snap`.
 

@@ -19,6 +19,10 @@ export class Markdown extends BasePage {
     this.metaData = getMetaFromRaw(this.metaStr);
   }
 
+  async getId() {
+    return this.metaData.id || super.getId();
+  }
+
   async getTitle() {
     return this.metaData.title || super.getTitle();
   }

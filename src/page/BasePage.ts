@@ -1,9 +1,14 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as moment from 'moment';
+import * as _ from 'lodash';
 
 export class BasePage {
   constructor(readonly raw: string, readonly path: string) {}
+
+  async getId() {
+    return _.snakeCase(path.basename(this.path));
+  }
 
   async getTitle() {
     return path.basename(this.path);

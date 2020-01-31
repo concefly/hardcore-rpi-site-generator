@@ -27,7 +27,8 @@ export function splitMetaStr(raw: string): [string, string] {
 }
 
 export interface IMdMeta {
-  title: any;
+  id: string;
+  title: string;
   createDate: moment.Moment;
   updateDate: moment.Moment;
   categories: string[];
@@ -35,21 +36,16 @@ export interface IMdMeta {
 }
 
 export function getMetaFromRaw(metaStr: string): IMdMeta {
-  const meta: {
-    title?: any;
-    createDate?: any;
-    updateDate?: any;
-    categories?: any;
-    tags?: any;
-  } = yaml.safeLoad(metaStr);
+  const meta: any = yaml.safeLoad(metaStr);
 
+  const id = meta && meta.id + '';
   const title = meta && meta.title + '';
   const createDate = meta?.createDate ? moment(meta.createDate) : moment();
   const updateDate = meta?.updateDate ? moment(meta.updateDate) : moment();
-  const categories = meta
+  const categories: string[] = meta
     ? _.compact(_.isArray(meta.categories) ? meta.categories : [meta.categories])
     : [];
-  const tags = meta ? _.compact(_.isArray(meta.tags) ? meta.tags : [meta.tags]) : [];
+  const tags: string[] = meta ? _.compact(_.isArray(meta.tags) ? meta.tags : [meta.tags]) : [];
 
-  return { title, createDate, updateDate, categories, tags };
+  return { id, title, createDate, updateDate, categories, tags };
 }

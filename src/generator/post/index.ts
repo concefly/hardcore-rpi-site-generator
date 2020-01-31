@@ -7,8 +7,6 @@ export class PostGenerator extends BaseGenerator {
     const result: { path: string; content: string }[] = [];
 
     for (const { page } of list) {
-      const createDate = await page.getCreateDate();
-
       const renderData = new RenderData({
         site: {},
         page: {
@@ -20,7 +18,7 @@ export class PostGenerator extends BaseGenerator {
       const { content } = await this.templateRender.render(renderData);
 
       result.push({
-        path: `post/${createDate.valueOf()}.html`,
+        path: `post/${await page.getId()}.html`,
         content,
       });
     }
