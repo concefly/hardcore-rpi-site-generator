@@ -5,5 +5,5 @@
     "skipLibCheck": true,
     "declaration": true
   },
-  "include": ["./src", "base"]
+  "include": ["./src"]
 }

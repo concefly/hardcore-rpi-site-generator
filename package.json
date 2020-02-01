@@ -2,11 +2,15 @@
   "name": "hardcore-rpi-site-generator",
   "description": "运行时",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "tsc --outDir dist",
-    "test": "npm run build && ava",
-    "ci": "npm run test"
+    "build": "rm -rf dist && tsc -p tsconfig-build.json --outDir dist",
+    "test": "tsc --outDir dist && ava",
+    "ci": "npm run test",
+    "prepublishOnly": "npm run ci && npm run build"
   },
   "devDependencies": {
     "@ava/typescript": "^1.0.0",
@@ -30,7 +34,7 @@
     "type": "git",
     "url": "git+https://github.com/concefly/hardcore-rpi-site-generator.git"
   },
-  "author": "",
+  "author": "concefly",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/concefly/hardcore-rpi-site-generator/issues"
