@@ -6,6 +6,7 @@ import { Collection } from './collection';
 import { PostGenerator } from './generator/post';
 import { BaseTemplateRender } from './template/BaseTemplateRender';
 import { NunjucksRender } from './template/Nunjucks';
+import { GenerateResultItem } from './generator/BaseGenerator';
 
 /** 默认配置 */
 export const defaultConfig: Partial<SiteGenerator['config']> = {
@@ -49,10 +50,7 @@ export class SiteGenerator {
     const collection = this.getCollection();
     const generators = [PostGenerator].map(G => new G(collection, this.templateRender));
 
-    let result: {
-      path: string;
-      content: string;
-    }[] = [];
+    let result: GenerateResultItem[] = [];
 
     for (const generator of generators) {
       result = result.concat(...(await generator.generate()));

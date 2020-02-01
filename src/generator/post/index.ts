@@ -1,4 +1,4 @@
-import { BaseGenerator } from '../BaseGenerator';
+import { BaseGenerator, GenerateResultItem } from '../BaseGenerator';
 import { RenderData } from '../../template/RenderData';
 
 export class PostGenerator extends BaseGenerator {
@@ -6,7 +6,7 @@ export class PostGenerator extends BaseGenerator {
 
   async generate() {
     const list = this.collection.getList();
-    const result: { path: string; content: string }[] = [];
+    const result: GenerateResultItem[] = [];
 
     for (const { page } of list) {
       const [id, title, content, raw] = await Promise.all([
@@ -27,10 +27,12 @@ export class PostGenerator extends BaseGenerator {
 
       const { content: renderContent } = await this.templateRender.render(renderData.toLocals());
 
-      result.push({
-        path: `/post/${id}.html`,
-        content: renderContent,
-      });
+      result.push(
+        new GenerateResultItem({
+          url: `/post/${id}.html`,
+          content: renderContent,
+        })
+      );
     }
 
     return result;
