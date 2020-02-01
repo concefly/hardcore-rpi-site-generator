@@ -4,7 +4,12 @@ import * as moment from 'moment';
 import * as _ from 'lodash';
 
 export class BasePage {
-  constructor(readonly raw: string, readonly path: string) {}
+  constructor(
+    readonly raw: Buffer,
+    readonly path: string,
+    /** 相对 config.sourcePath 的路径 */
+    readonly relativePath: string
+  ) {}
 
   async getId() {
     return _.snakeCase(path.basename(this.path));
@@ -33,10 +38,10 @@ export class BasePage {
   }
 
   async getNoMetaRaw(): Promise<string> {
-    return this.raw;
+    return this.raw.toString('utf-8');
   }
 
   async render(): Promise<string> {
-    return this.raw;
+    return this.raw.toString('utf-8');
   }
 }

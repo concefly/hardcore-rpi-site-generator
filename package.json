@@ -1,7 +1,7 @@
 {
   "name": "hardcore-rpi-site-generator",
-  "description": "运行时",
-  "version": "1.0.1",
+  "description": "硬核树莓派静态站点生成工具",
+  "version": "1.0.2",
   "main": "dist/index.js",
   "bin": {
     "hardcore-rpi-site-generator": "dist/cli/index.js"
@@ -11,7 +11,7 @@
   ],
   "scripts": {
     "demo": "npm run build && node dist/cli/index.js -t src/__test__/tpl -s src/__test__/source -o demo && serve demo",
-    "build": "rm -rf dist && tsc -p tsconfig-build.json --outDir dist",
+    "build": "rm -rf dist/* && tsc -p tsconfig-build.json --outDir dist",
     "test": "tsc --outDir dist && ava",
     "ci": "npm run test",
     "prepublishOnly": "npm run ci && npm run build"
@@ -52,7 +52,7 @@
     "files": [
       "**/__test__/**/*.test.ts"
     ],
-    "tap": true,
+    "verbose": true,
     "typescript": {
       "rewritePaths": {
         "src/": "dist/"

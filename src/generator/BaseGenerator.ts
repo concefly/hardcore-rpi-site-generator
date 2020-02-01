@@ -5,7 +5,7 @@ export class GenerateResultItem {
   constructor(
     readonly data: {
       url: string;
-      content: string;
+      content: Buffer;
     }
   ) {}
 }

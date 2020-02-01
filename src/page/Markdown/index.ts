@@ -1,7 +1,6 @@
 import * as marked from 'marked';
 import { MdRenderer } from './MdRenderer';
 import { splitMetaStr, IMdMeta, getMetaFromRaw } from './util';
-
 import * as _ from 'lodash';
 import { BasePage } from '../BasePage';
 
@@ -12,10 +11,10 @@ export class Markdown extends BasePage {
 
   private metaData: IMdMeta;
 
-  constructor(readonly raw: string, readonly path: string) {
-    super(raw, path);
+  constructor(readonly raw: Buffer, readonly path: string, readonly relPath: string) {
+    super(raw, path, relPath);
 
-    [this.metaStr, this.mdStr] = splitMetaStr(raw);
+    [this.metaStr, this.mdStr] = splitMetaStr(raw.toString('utf-8'));
     this.metaData = getMetaFromRaw(this.metaStr);
   }
 

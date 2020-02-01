@@ -9,6 +9,9 @@ export class PostGenerator extends BaseGenerator {
     const result: GenerateResultItem[] = [];
 
     for (const { page } of list) {
+      // 模拟 hexo 规则, 不在 _posts 目录下的直接跳过
+      if (!page.relativePath.includes('_posts')) continue;
+
       const [id, title, content, raw] = await Promise.all([
         page.getId(),
         page.getTitle(),
@@ -30,7 +33,7 @@ export class PostGenerator extends BaseGenerator {
       result.push(
         new GenerateResultItem({
           url: `/post/${id}.html`,
-          content: renderContent,
+          content: Buffer.from(renderContent, 'utf-8'),
         })
       );
     }

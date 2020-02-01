@@ -17,7 +17,7 @@ categories:
 `;
 
 test('normal', async t => {
-  const md = new Markdown(content, '/');
+  const md = new Markdown(Buffer.from(content, 'utf-8'), '/', '/');
 
   t.deepEqual(await md.getTitle(), '1');
   t.deepEqual((await md.getCreateDate()).format('YYYY-MM-DD'), '2020-01-30');

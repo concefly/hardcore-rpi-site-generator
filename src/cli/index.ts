@@ -7,7 +7,7 @@ import { SiteGenerator } from '../index';
 program
   .option('-t, --templatePath [path]', 'templatePath')
   .option('-s, --sourcePath [path]', 'sourcePath')
-  .option('-p, --pattern <glob>', 'pattern', '**/*.md')
+  .option('-p, --pattern <glob>', 'pattern', '**/*.*')
   .option('-o, --out <path>', 'output dir', 'doc');
 
 program.parse(process.argv);
@@ -29,10 +29,12 @@ async function run(opt: {
   for (const { data } of result) {
     const outFilePath = path.join(opt.out, data.url.replace(/^\//, ''));
 
+    console.log('> emit %s', outFilePath);
+
     // 补全目录
     fs.mkdirpSync(path.dirname(outFilePath));
 
-    fs.writeFileSync(outFilePath, data.content, { encoding: 'utf-8' });
+    fs.writeFileSync(outFilePath, data.content);
   }
 }
 

@@ -7,7 +7,6 @@ test('SiteGenerator', async t => {
   const sg = new SiteGenerator({
     templatePath: `${cwd}/src/__test__/tpl`,
     sourcePath: `${cwd}/src/__test__/source`,
-    pattern: '**/*.md',
   });
 
   const result = await sg.exec();
