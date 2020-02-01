@@ -1,8 +1,11 @@
 {
   "name": "hardcore-rpi-site-generator",
   "description": "运行时",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "dist/index.js",
+  "bin": {
+    "hardcore-rpi-site-generator": "dist/cli/index.js"
+  },
   "files": [
     "dist"
   ],
