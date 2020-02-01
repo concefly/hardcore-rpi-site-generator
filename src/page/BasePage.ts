@@ -8,7 +8,10 @@ export class BasePage {
     readonly raw: Buffer,
     readonly path: string,
     /** 相对 config.sourcePath 的路径 */
-    readonly relativePath: string
+    readonly relativePath: string,
+    readonly extInfo: {
+      mime: string;
+    }
   ) {}
 
   async getId() {
@@ -28,7 +31,10 @@ export class BasePage {
     const s = fs.statSync(this.path);
     return moment(s.mtime);
   }
+}
 
+/** 文本类型 */
+export class BaseTextPage extends BasePage {
   async getCategories(): Promise<string[]> {
     return [];
   }
@@ -45,3 +51,6 @@ export class BasePage {
     return this.raw.toString('utf-8');
   }
 }
+
+/** 二进制类型 */
+export class BaseBinPage extends BasePage {}

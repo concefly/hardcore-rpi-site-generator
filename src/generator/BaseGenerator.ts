@@ -1,12 +1,46 @@
 import { Collection } from '../collection';
 import { BaseTemplateRender } from '../template/BaseTemplateRender';
+import { RenderPageData } from '../template/RenderData';
 
-export class GenerateResultItem {
+export class GenerateResult {
+  /** 浅层合并所有 globalInfo */
+  static mergeAndUpdateGlobalInfo(grList: GenerateResult[]) {
+    const mergedGlobalInfo = grList.reduce(
+      (re, gr) => ({ ...re, ...gr.globalInfo }),
+      {} as GenerateResult['globalInfo']
+    );
+
+    grList.forEach(gr => {
+      gr.globalInfo = mergedGlobalInfo;
+    });
+  }
+
   constructor(
-    readonly data: {
-      url: string;
-      content: Buffer;
-    }
+    readonly type: string,
+    /** generator 上报的信息 */
+    public globalInfo: {
+      post?: {
+        list: {
+          title: string,
+          path: string;
+        }[];
+        count: number;
+      };
+    } = {},
+    public renderList: (
+      | {
+          renderType: 'tpl';
+          path: string;
+          mime: string;
+          renderPageData: RenderPageData;
+        }
+      | {
+          renderType: 'raw';
+          path: string;
+          mime: string;
+          buffer: Buffer;
+        }
+    )[] = []
   ) {}
 }
 
@@ -16,5 +50,5 @@ export abstract class BaseGenerator {
   /** 生成器标识(相互不同，主要用于 html 渲染识别) */
   abstract readonly type: string;
 
-  abstract async generate(): Promise<GenerateResultItem[]>;
+  abstract async generate(): Promise<GenerateResult>;
 }

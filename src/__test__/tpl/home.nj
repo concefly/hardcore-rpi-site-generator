@@ -1,0 +1,7 @@
+<h1>Home</h1>
+
+<ul>
+  {% for post in ctx.data.site.post.list %}
+    <li><a href="{{ post.path }}">{{ post.title }}</a></li>
+  {% endfor %}
+</ul>

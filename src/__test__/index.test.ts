@@ -1,5 +1,6 @@
 import test from 'ava';
 import { SiteGenerator } from '..';
+import * as _ from 'lodash';
 
 const cwd = process.cwd();
 
@@ -10,5 +11,15 @@ test('SiteGenerator', async t => {
   });
 
   const result = await sg.exec();
-  t.snapshot(result);
+
+  t.snapshot(_.sortBy(result.map(r => r.path)));
+
+  t.snapshot(
+    result.map(r => {
+      return {
+        ...r,
+        content: r.mime.match(/^text/) ? r.content.toString('utf-8') : r.content,
+      };
+    })
+  );
 });

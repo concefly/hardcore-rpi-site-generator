@@ -2,20 +2,19 @@ import * as marked from 'marked';
 import { MdRenderer } from './MdRenderer';
 import { splitMetaStr, IMdMeta, getMetaFromRaw } from './util';
 import * as _ from 'lodash';
-import { BasePage } from '../BasePage';
+import { BaseTextPage } from '../BasePage';
 
-export class Markdown extends BasePage {
+export class Markdown extends BaseTextPage {
   private mdRerender = new MdRenderer();
-  private metaStr = '';
-  private mdStr = '';
+  private mdSplitData = splitMetaStr(this.raw.toString('utf-8'));
+  private metaData: IMdMeta = getMetaFromRaw(this.metaStr);
 
-  private metaData: IMdMeta;
+  get metaStr() {
+    return this.mdSplitData[0];
+  }
 
-  constructor(readonly raw: Buffer, readonly path: string, readonly relPath: string) {
-    super(raw, path, relPath);
-
-    [this.metaStr, this.mdStr] = splitMetaStr(raw.toString('utf-8'));
-    this.metaData = getMetaFromRaw(this.metaStr);
+  get mdStr() {
+    return this.mdSplitData[1];
   }
 
   async getId() {

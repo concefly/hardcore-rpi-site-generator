@@ -28,8 +28,8 @@ async function run(opt: {
 
   const result = await sg.exec();
 
-  for (const { data } of result) {
-    const outFilePath = path.join(opt.out, data.url.replace(/^\//, ''));
+  for (const data of result) {
+    const outFilePath = path.join(opt.out, data.path.replace(/^\//, ''));
 
     console.log('> emit %s', outFilePath);
 
