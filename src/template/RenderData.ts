@@ -9,6 +9,7 @@ export class RenderData {
       page: {
         title: string;
         content: string;
+        raw: string;
       };
     }
   ) {}

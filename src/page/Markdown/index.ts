@@ -43,6 +43,10 @@ export class Markdown extends BasePage {
     return this.metaData.tags || super.getTags();
   }
 
+  async getNoMetaRaw() {
+    return this.mdStr;
+  }
+
   /** 渲染 html */
   async render(): Promise<string> {
     return new Promise((resolve, reject) => {

@@ -1,3 +1,7 @@
 <h1>Test</h1>
 
 {% include ctx.type + ".nj" %}
+
+<script>
+  window.context = {{ ctx.data | dump | safe }}
+</script>

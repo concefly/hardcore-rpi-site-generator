@@ -9,19 +9,27 @@ export class PostGenerator extends BaseGenerator {
     const result: { path: string; content: string }[] = [];
 
     for (const { page } of list) {
+      const [id, title, content, raw] = await Promise.all([
+        page.getId(),
+        page.getTitle(),
+        page.render(),
+        page.getNoMetaRaw(),
+      ]);
+
       const renderData = new RenderData(this, {
         site: {},
         page: {
-          title: await page.getTitle(),
-          content: await page.render(),
+          title,
+          content,
+          raw,
         },
       });
 
-      const { content } = await this.templateRender.render(renderData.toLocals());
+      const { content: renderContent } = await this.templateRender.render(renderData.toLocals());
 
       result.push({
-        path: `post/${await page.getId()}.html`,
-        content,
+        path: `/post/${id}.html`,
+        content: renderContent,
       });
     }
 

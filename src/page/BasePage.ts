@@ -32,6 +32,10 @@ export class BasePage {
     return [];
   }
 
+  async getNoMetaRaw(): Promise<string> {
+    return this.raw;
+  }
+
   async render(): Promise<string> {
     return this.raw;
   }
