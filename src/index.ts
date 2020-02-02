@@ -62,7 +62,7 @@ export class SiteGenerator {
     return collection;
   }
 
-  async exec(): Promise<IExecResult> {
+  async exec(opt?: { extraRenderLocals?: any }): Promise<IExecResult> {
     const collection = await this.getCollection();
     const generators = this.generatorList.map(G => new G(collection, this.templateRender));
 
@@ -95,7 +95,10 @@ export class SiteGenerator {
               renderInfo.renderPageData
             ).toLocals();
 
-            const { content } = await this.templateRender.render(locals);
+            const { content } = await this.templateRender.render({
+              ...opt?.extraRenderLocals,
+              ...locals,
+            });
 
             resultItem.content = Buffer.from(content, 'utf-8');
             break;

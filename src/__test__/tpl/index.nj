@@ -2,6 +2,8 @@
 
 {% include ctx.type + ".nj" %}
 
+{{ ctx2 | dump | safe }}
+
 <script>
   window.context = {{ ctx.data | dump | safe }}
 </script>

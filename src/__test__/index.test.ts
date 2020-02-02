@@ -10,7 +10,7 @@ test('SiteGenerator', async t => {
     sourcePath: `${cwd}/src/__test__/source`,
   });
 
-  const result = await sg.exec();
+  const result = await sg.exec({ extraRenderLocals: { ctx2: { a: 'x' } } });
 
   t.snapshot(_.sortBy(result.output.map(r => r.path)));
 
