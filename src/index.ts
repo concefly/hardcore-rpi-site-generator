@@ -33,7 +33,10 @@ export class SiteGenerator {
 
   constructor(configData: Config['data']) {
     this.config = new Config(configData);
-    this.templateRender = new this.config.data.TemplateRender(this.config.data.templatePath);
+    this.templateRender = new this.config.data.TemplateRender(
+      this.config.data.templatePath,
+      this.config.data.mode
+    );
   }
 
   private async getPages() {

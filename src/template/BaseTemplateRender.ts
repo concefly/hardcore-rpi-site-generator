@@ -1,7 +1,8 @@
 import { RenderData } from './RenderData';
+import { ConfigMode } from '../config';
 
 export class BaseTemplateRender {
-  constructor(readonly templatePath: string) {}
+  constructor(readonly templatePath: string, readonly mode: ConfigMode) {}
 
   getDepFileInfos(): { path: string }[] {
     return [];

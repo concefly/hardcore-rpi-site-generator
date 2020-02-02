@@ -1,6 +1,8 @@
 import { BaseTemplateRender } from './template/BaseTemplateRender';
 import { NunjucksRender } from './template/Nunjucks';
 
+export type ConfigMode = 'dev' | 'prod';
+
 export class Config {
   constructor(
     readonly data: {
@@ -8,6 +10,7 @@ export class Config {
       templatePath: string;
       pattern?: string;
       TemplateRender?: typeof BaseTemplateRender;
+      mode?: ConfigMode;
     }
   ) {
     Object.assign(
@@ -16,6 +19,7 @@ export class Config {
       {
         pattern: '**',
         TemplateRender: NunjucksRender,
+        mode: 'prod',
       } as Partial<Config['data']>,
       this.data
     );
