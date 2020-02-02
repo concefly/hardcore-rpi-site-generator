@@ -10,12 +10,19 @@ import { StaticGenerator } from './generator/static';
 import { RenderData } from './template/RenderData';
 import { HomeGenerator } from './generator/home';
 
-/** 执行结果 */
+export * from './config';
+
 export interface IExecResultItem {
   path: string;
   content: Buffer;
   renderType: GenerateResult['renderList'][0]['renderType'];
   mime: string;
+}
+
+/** 执行结果 */
+export interface IExecResult {
+  depFileInfos: ReturnType<Collection['getDepFileInfos']>;
+  output: IExecResultItem[];
 }
 
 export class SiteGenerator {
@@ -51,14 +58,14 @@ export class SiteGenerator {
     return collection;
   }
 
-  async exec(): Promise<IExecResultItem[]> {
+  async exec(): Promise<IExecResult> {
     const collection = await this.getCollection();
     const generators = this.generatorList.map(G => new G(collection, this.templateRender));
 
     const grList = await Promise.all(generators.map(g => g.generate()));
     GenerateResult.mergeAndUpdateGlobalInfo(grList);
 
-    const result: IExecResultItem[] = [];
+    const result: IExecResult = { depFileInfos: collection.getDepFileInfos(), output: [] };
 
     for (const gr of grList) {
       for (const renderInfo of gr.renderList) {
@@ -91,7 +98,7 @@ export class SiteGenerator {
 
         if (!resultItem.content) continue;
 
-        result.push(resultItem);
+        result.output.push(resultItem);
       }
     }
 

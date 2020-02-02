@@ -12,10 +12,10 @@ test('SiteGenerator', async t => {
 
   const result = await sg.exec();
 
-  t.snapshot(_.sortBy(result.map(r => r.path)));
+  t.snapshot(_.sortBy(result.output.map(r => r.path)));
 
   t.snapshot(
-    result.map(r => {
+    result.output.map(r => {
       return {
         ...r,
         content: r.mime.match(/^text/) ? r.content.toString('utf-8') : r.content,

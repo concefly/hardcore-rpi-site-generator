@@ -28,7 +28,7 @@ async function run(opt: {
 
   const result = await sg.exec();
 
-  for (const data of result) {
+  for (const data of result.output) {
     const outFilePath = path.join(opt.out, data.path.replace(/^\//, ''));
 
     console.log('> emit %s', outFilePath);

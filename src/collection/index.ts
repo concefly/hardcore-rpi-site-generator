@@ -17,4 +17,13 @@ export class Collection {
     const list = [...this.data.values()];
     return list;
   }
+
+  /** 依赖文件列表 */
+  getDepFileInfos() {
+    return this.getList().map(d => ({
+      path: d.page.path,
+      relativePath: d.page.relativePath,
+      extInfo: d.page.extInfo,
+    }));
+  }
 }
