@@ -21,6 +21,7 @@ export interface IExecResultItem {
 
 /** 执行结果 */
 export interface IExecResult {
+  depTplInfos: ReturnType<BaseTemplateRender['getDepFileInfos']>;
   depFileInfos: ReturnType<Collection['getDepFileInfos']>;
   output: IExecResultItem[];
 }
@@ -65,7 +66,11 @@ export class SiteGenerator {
     const grList = await Promise.all(generators.map(g => g.generate()));
     GenerateResult.mergeAndUpdateGlobalInfo(grList);
 
-    const result: IExecResult = { depFileInfos: collection.getDepFileInfos(), output: [] };
+    const result: IExecResult = {
+      depTplInfos: this.templateRender.getDepFileInfos(),
+      depFileInfos: collection.getDepFileInfos(),
+      output: [],
+    };
 
     for (const gr of grList) {
       for (const renderInfo of gr.renderList) {

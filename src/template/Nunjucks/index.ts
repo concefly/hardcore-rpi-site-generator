@@ -1,8 +1,17 @@
 import { BaseTemplateRender } from '../BaseTemplateRender';
 import * as nunjucks from 'nunjucks';
+import * as glob from 'glob';
 
 export class NunjucksRender extends BaseTemplateRender {
   private nunjucksEnv = new nunjucks.Environment(new nunjucks.FileSystemLoader(this.templatePath));
+
+  getDepFileInfos(): { path: string }[] {
+    return glob.sync('**/*.nj', { cwd: this.templatePath, nodir: true, absolute: true }).map(p => {
+      return {
+        path: p,
+      };
+    });
+  }
 
   async render(data: any) {
     const content = await new Promise<string>((resolve, reject) => {
