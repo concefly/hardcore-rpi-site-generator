@@ -21,7 +21,9 @@ export class Config {
         TemplateRender: NunjucksRender,
         mode: 'prod',
       } as Partial<Config['data']>,
-      this.data
+
+      // 这里要解引用, 才能保证覆盖成功
+      { ...this.data }
     );
   }
 }
