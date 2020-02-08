@@ -18,6 +18,8 @@ export class HomeGenerator extends BaseGenerator {
         title: '首页',
         content: '',
         raw: '',
+        updateDate: '',
+        createDate: '',
       }),
     });
 

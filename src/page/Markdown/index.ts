@@ -17,35 +17,35 @@ export class Markdown extends BaseTextPage {
     return this.mdSplitData[1];
   }
 
-  async getId() {
+  getId() {
     return this.metaData.id || super.getId();
   }
 
-  async getTitle() {
+  getTitle() {
     return this.metaData.title || super.getTitle();
   }
 
-  async getCreateDate() {
+  getCreateDate() {
     return this.metaData.createDate || super.getCreateDate();
   }
 
-  async getUpdateDate() {
-    return this.metaData.updateDate || super.getUpdateDate();
+  getUpdateDate() {
+    return this.metaData.updateDate || this.metaData.createDate || super.getUpdateDate();
   }
 
-  async getCategories() {
+  getCategories() {
     return this.metaData.categories || super.getCategories();
   }
 
-  async getTags() {
+  getTags() {
     return this.metaData.tags || super.getTags();
   }
 
-  async getMeta() {
+  getMeta() {
     return this.metaData._originMeta;
   }
 
-  async getNoMetaRaw() {
+  getNoMetaRaw() {
     return this.mdStr;
   }
 

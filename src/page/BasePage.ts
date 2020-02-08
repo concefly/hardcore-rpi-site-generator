@@ -14,20 +14,24 @@ export class BasePage {
     }
   ) {}
 
-  async getId() {
+  getId() {
     return _.snakeCase(path.basename(this.path));
   }
 
-  async getTitle() {
+  getTitle() {
     return path.basename(this.path);
   }
 
-  async getCreateDate() {
+  getCreateDate() {
+    if (!fs.existsSync(this.path)) return moment(0);
+
     const s = fs.statSync(this.path);
     return moment(s.ctime);
   }
 
-  async getUpdateDate() {
+  getUpdateDate() {
+    if (!fs.existsSync(this.path)) return moment(0);
+
     const s = fs.statSync(this.path);
     return moment(s.mtime);
   }
@@ -35,19 +39,19 @@ export class BasePage {
 
 /** 文本类型 */
 export class BaseTextPage extends BasePage {
-  async getCategories(): Promise<string[]> {
+  getCategories(): string[] {
     return [];
   }
 
-  async getTags(): Promise<string[]> {
+  getTags(): string[] {
     return [];
   }
 
-  async getMeta(): Promise<any> {
+  getMeta(): any {
     return null;
   }
 
-  async getNoMetaRaw(): Promise<string> {
+  getNoMetaRaw(): string {
     return this.raw.toString('utf-8');
   }
 

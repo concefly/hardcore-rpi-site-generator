@@ -2,6 +2,9 @@ import { Collection } from '../collection';
 import { BaseTemplateRender } from '../template/BaseTemplateRender';
 import { RenderPageData } from '../template/RenderData';
 
+/** generator 上报的信息, 用于声明合并 */
+export interface IGenerateGlobalInfo {}
+
 export class GenerateResult {
   /** 浅层合并所有 globalInfo */
   static mergeAndUpdateGlobalInfo(grList: GenerateResult[]) {
@@ -18,15 +21,7 @@ export class GenerateResult {
   constructor(
     readonly type: string,
     /** generator 上报的信息 */
-    public globalInfo: {
-      post?: {
-        list: {
-          title: string,
-          path: string;
-        }[];
-        count: number;
-      };
-    } = {},
+    public globalInfo: Partial<IGenerateGlobalInfo> = {},
     public renderList: (
       | {
           renderType: 'tpl';

@@ -1,5 +1,7 @@
 <h1>{{ ctx.data.page.title }}</h1>
 
+<time>{{ ctx.data.page.updateDate }}</time>
+
 <article>
   {{ ctx.data.page.content | safe }}
 </article>
