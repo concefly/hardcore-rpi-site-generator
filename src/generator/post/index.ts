@@ -9,6 +9,8 @@ interface IPageSummaryItem {
   createDate: string;
   updateDate: string;
   summary: string;
+  tags: string[];
+  categories: string[];
 }
 
 declare module '../BaseGenerator' {
@@ -50,6 +52,7 @@ export class PostGenerator extends BaseGenerator {
       renderPageData: RenderPageData;
     }[] = [];
 
+    const resultMap: IGenerateGlobalInfo['post']['map'] = {};
     const resultTags: IGenerateGlobalInfo['post']['tags'] = {};
 
     for (const { page } of sortedList) {
@@ -63,6 +66,9 @@ export class PostGenerator extends BaseGenerator {
       const raw = page.getNoMetaRaw();
       const meta = page.getMeta();
       const tags = page.getTags();
+      const categories = page.getCategories();
+      const createDate = page.getCreateDate().format('YYYY-MM-DD HH:mm:ss');
+      const updateDate = page.getUpdateDate().format('YYYY-MM-DD HH:mm:ss');
 
       const content = await page.render();
 
@@ -71,8 +77,8 @@ export class PostGenerator extends BaseGenerator {
         content,
         raw,
         meta,
-        createDate: page.getCreateDate().format('YYYY-MM-DD HH:mm:ss'),
-        updateDate: page.getUpdateDate().format('YYYY-MM-DD HH:mm:ss'),
+        createDate,
+        updateDate,
       });
 
       const postPath = `/post/${id}.html`;
@@ -89,24 +95,25 @@ export class PostGenerator extends BaseGenerator {
         if (!resultTags[tag]) resultTags[tag] = [];
         resultTags[tag].push(postPath);
       });
-    }
 
-    // d
-    resultRenderList;
+      resultMap[postPath] = {
+        title,
+        updateDate,
+        createDate,
+        tags,
+        categories,
+        summary: _.chain(content)
+          .thru(s => striptags(s))
+          .truncate({ length: 100 })
+          .value(),
+      };
+    }
 
     result.renderList = resultRenderList;
 
     // 填充 globalInfo
     result.globalInfo.post = {
-      map: _.mapValues(_.keyBy(resultRenderList, 'path'), v => ({
-        title: v.renderPageData.data.title,
-        updateDate: v.renderPageData.data.updateDate,
-        createDate: v.renderPageData.data.createDate,
-        summary: _.chain(v.renderPageData.data.content)
-          .thru(s => striptags(s))
-          .truncate({ length: 100 })
-          .value(),
-      })),
+      map: resultMap,
       list: resultRenderList.map(r => r.path),
       count: result.renderList.length,
       tags: resultTags,
