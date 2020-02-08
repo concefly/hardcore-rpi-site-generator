@@ -1,7 +1,7 @@
 {
   "name": "hardcore-rpi-site-generator",
   "description": "硬核树莓派静态站点生成工具",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "main": "dist/index.js",
   "bin": {
     "hardcore-rpi-site-generator": "dist/cli/index.js"
@@ -39,7 +39,8 @@
     "marked": "^0.8.0",
     "mmmagic": "^0.5.3",
     "moment": "^2.24.0",
-    "nunjucks": "^3.2.0"
+    "nunjucks": "^3.2.0",
+    "striptags": "^3.1.1"
   },
   "repository": {
     "type": "git",

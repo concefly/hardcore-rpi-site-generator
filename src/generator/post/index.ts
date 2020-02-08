@@ -2,19 +2,25 @@ import { BaseGenerator, GenerateResult, IGenerateGlobalInfo } from '../BaseGener
 import { RenderPageData } from '../../template/RenderData';
 import { BaseTextPage } from '../../page/BasePage';
 import * as _ from 'lodash';
+import * as striptags from 'striptags';
 
 interface IPageSummaryItem {
   title: string;
-  path: string;
+  createDate: string;
+  updateDate: string;
+  summary: string;
 }
 
 declare module '../BaseGenerator' {
   interface IGenerateGlobalInfo {
     post?: {
-      list: IPageSummaryItem[];
+      map: {
+        [path: string]: IPageSummaryItem;
+      };
+      list: string[];
       count: number;
       tags: {
-        [name: string]: IPageSummaryItem[];
+        [name: string]: string[];
       };
     };
   }
@@ -81,7 +87,7 @@ export class PostGenerator extends BaseGenerator {
       // 填充 tag
       tags.forEach(tag => {
         if (!resultTags[tag]) resultTags[tag] = [];
-        resultTags[tag].push({ title, path: postPath });
+        resultTags[tag].push(postPath);
       });
     }
 
@@ -92,7 +98,16 @@ export class PostGenerator extends BaseGenerator {
 
     // 填充 globalInfo
     result.globalInfo.post = {
-      list: resultRenderList.map(r => ({ path: r.path, title: r.renderPageData.data.title })),
+      map: _.mapValues(_.keyBy(resultRenderList, 'path'), v => ({
+        title: v.renderPageData.data.title,
+        updateDate: v.renderPageData.data.updateDate,
+        createDate: v.renderPageData.data.createDate,
+        summary: _.chain(v.renderPageData.data.content)
+          .thru(s => striptags(s))
+          .truncate({ length: 100 })
+          .value(),
+      })),
+      list: resultRenderList.map(r => r.path),
       count: result.renderList.length,
       tags: resultTags,
     };
