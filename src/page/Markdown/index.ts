@@ -41,6 +41,10 @@ export class Markdown extends BaseTextPage {
     return this.metaData.tags || super.getTags();
   }
 
+  async getMeta() {
+    return this.metaData._originMeta;
+  }
+
   async getNoMetaRaw() {
     return this.mdStr;
   }

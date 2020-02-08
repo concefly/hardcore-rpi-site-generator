@@ -43,6 +43,10 @@ export class BaseTextPage extends BasePage {
     return [];
   }
 
+  async getMeta(): Promise<any> {
+    return null;
+  }
+
   async getNoMetaRaw(): Promise<string> {
     return this.raw.toString('utf-8');
   }

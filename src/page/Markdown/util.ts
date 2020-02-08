@@ -27,12 +27,15 @@ export function splitMetaStr(raw: string): [string, string] {
 }
 
 export interface IMdMeta {
-  id: string;
-  title: string;
-  createDate: moment.Moment;
-  updateDate: moment.Moment;
-  categories: string[];
-  tags: string[];
+  id?: string;
+  title?: string;
+  createDate?: moment.Moment;
+  updateDate?: moment.Moment;
+  categories?: string[];
+  tags?: string[];
+
+  /** 原始 meta 对象 */
+  _originMeta: any;
 }
 
 export function getMetaFromRaw(metaStr: string): IMdMeta {
@@ -40,12 +43,12 @@ export function getMetaFromRaw(metaStr: string): IMdMeta {
 
   const id = meta && meta.id && meta.id + '';
   const title = meta && meta.title && meta.title + '';
-  const createDate = meta?.createDate ? moment(meta.createDate) : moment();
-  const updateDate = meta?.updateDate ? moment(meta.updateDate) : moment();
+  const createDate = meta?.createDate && moment(meta.createDate);
+  const updateDate = meta?.updateDate && moment(meta.updateDate);
   const categories: string[] = meta
     ? _.compact(_.isArray(meta.categories) ? meta.categories : [meta.categories])
     : [];
   const tags: string[] = meta ? _.compact(_.isArray(meta.tags) ? meta.tags : [meta.tags]) : [];
 
-  return { id, title, createDate, updateDate, categories, tags };
+  return { id, title, createDate, updateDate, categories, tags, _originMeta: meta };
 }

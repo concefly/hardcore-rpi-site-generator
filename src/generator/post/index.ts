@@ -21,17 +21,19 @@ export class PostGenerator extends BaseGenerator {
       // 模拟 hexo 规则, 不在 _posts 目录下的直接跳过
       if (!page.relativePath.includes('_posts')) continue;
 
-      const [id, title, content, raw] = await Promise.all([
+      const [id, title, content, raw, meta] = await Promise.all([
         page.getId(),
         page.getTitle(),
         page.render(),
         page.getNoMetaRaw(),
+        page.getMeta(),
       ]);
 
       const renderPageData = new RenderPageData({
         title,
         content,
         raw,
+        meta,
       });
 
       result.renderList.push({

@@ -13,6 +13,9 @@ export class RenderPageData {
 
       /** 页面原始信息（比如 md 原文） */
       raw: string;
+
+      /** 页面 Meta（由 Page 定义，类型不固定） */
+      meta?: any;
     }
   ) {}
 }
