@@ -1,8 +1,7 @@
-import { BaseGenerator, GenerateResult, IGenerateGlobalInfo } from '../BaseGenerator';
-import { RenderPageData } from '../../template/RenderData';
-import { BaseTextPage } from '../../page/BasePage';
+import { BaseGenerator, GenerateResult } from '../BaseGenerator';
 import * as _ from 'lodash';
-import * as striptags from 'striptags';
+import { getPageList } from './util';
+import { RenderPageData } from '../../template/RenderData';
 
 interface IPageSummaryItem {
   title: string;
@@ -21,7 +20,6 @@ declare module '../BaseGenerator' {
         [path: string]: IPageSummaryItem;
       };
       list: string[];
-      count: number;
       tags: {
         [name: string]: string[];
       };
@@ -39,93 +37,59 @@ export class PostGenerator extends BaseGenerator {
   readonly type = 'post';
 
   async generate() {
-    const list = this.collection.getList();
-    const sortedList = [...list].sort(
-      (a, b) => b.page.getCreateDate().valueOf() - a.page.getCreateDate().valueOf()
-    );
-
+    const list = await getPageList(this.collection);
     const result = new GenerateResult(this.type);
 
-    const resultRenderList: {
-      renderType: 'tpl';
-      path: string;
-      mime: string;
-      renderPageData: RenderPageData;
-    }[] = [];
+    const postList = list.filter(d => d.isInPostsDir);
 
-    const resultMap: IGenerateGlobalInfo['post']['map'] = {};
-    const resultTags: IGenerateGlobalInfo['post']['tags'] = {};
+    result.globalInfo = {
+      post: {
+        list: postList.map(d => d.postPath),
+        tags: postList.reduce(
+          (tagMap, d) => {
+            const re = { ...tagMap };
 
-    for (const { page } of sortedList) {
-      // 跳过非文本类型
-      if (!(page instanceof BaseTextPage)) continue;
+            d.tags.forEach(tag => {
+              if (!re[tag]) re[tag] = [];
 
-      // 跳过非 markdown 文档
-      const isMd = !!page.path.match(/\.md$/);
-      if (!isMd) continue;
+              re[tag].push(d.postPath);
+            });
 
-      const id = page.getId();
-      const title = page.getTitle();
-      const raw = page.getNoMetaRaw();
-      const meta = page.getMeta();
-      const tags = page.getTags();
-      const categories = page.getCategories();
-      const createDate = page.getCreateDate().format('YYYY-MM-DD HH:mm:ss');
-      const updateDate = page.getUpdateDate().format('YYYY-MM-DD HH:mm:ss');
-
-      const content = await page.render();
-
-      const renderPageData = new RenderPageData({
-        title,
-        content,
-        raw,
-        meta,
-        createDate,
-        updateDate,
-      });
-
-      const isInPostsDir = page.relativePath.split('/').some(p => p === '_posts');
-
-      const postPath = isInPostsDir
-        ? `/post/${id}.html`
-        : `/${page.relativePath}`.replace(/\/[^\/]*?$/, `/${id}.html`);
-
-      resultRenderList.push({
-        path: postPath,
-        renderType: 'tpl',
-        renderPageData,
-        mime: page.extInfo.mime,
-      });
-
-      // 填充 tag
-      tags.forEach(tag => {
-        if (!resultTags[tag]) resultTags[tag] = [];
-        resultTags[tag].push(postPath);
-      });
-
-      resultMap[postPath] = {
-        title,
-        updateDate,
-        createDate,
-        tags,
-        categories,
-        summary: _.chain(content)
-          .thru(s => striptags(s))
-          .truncate({ length: 100 })
-          .value(),
-        originMeta: meta,
-      };
-    }
-
-    result.renderList = resultRenderList;
-
-    // 填充 globalInfo
-    result.globalInfo.post = {
-      map: resultMap,
-      list: resultRenderList.map(r => r.path),
-      count: result.renderList.length,
-      tags: resultTags,
+            return re;
+          },
+          {} as {
+            [name: string]: string[];
+          }
+        ),
+        map: _.mapValues(_.keyBy(list, 'postPath'), d => {
+          return {
+            title: d.title,
+            createDate: d.createDate,
+            updateDate: d.updateDate,
+            tags: d.tags,
+            categories: d.categories,
+            originMeta: d.meta,
+            summary: d.summary,
+          };
+        }),
+      },
     };
+
+    result.renderList = list.map(d => {
+      return {
+        renderType: 'tpl',
+        path: d.postPath,
+        mime: 'text/plain',
+        renderPageData: new RenderPageData({
+          title: d.title,
+          content: d.content,
+          createDate: d.createDate,
+          updateDate: d.updateDate,
+          meta: d.meta,
+          raw: d.raw,
+        }),
+      };
+    });
 
     return result;
   }

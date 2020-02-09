@@ -4,6 +4,7 @@ import { BaseGenerator, GenerateResult } from '../BaseGenerator';
  * 静态文件生成器
  *
  * - 不以 `_` 开头
+ * - 不是 .md 文件
  */
 export class StaticGenerator extends BaseGenerator {
   readonly type = 'media';
@@ -13,6 +14,8 @@ export class StaticGenerator extends BaseGenerator {
     const result = new GenerateResult(this.type);
 
     for (const { page } of list) {
+      if (page.path.endsWith('.md')) continue;
+
       // 有路径段是以 _ 开头的，则跳过
       if (page.relativePath.split('/').some(p => p.startsWith('_'))) continue;
 
