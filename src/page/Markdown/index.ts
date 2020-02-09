@@ -51,8 +51,23 @@ export class Markdown extends BaseTextPage {
 
   /** 渲染 html */
   async render(): Promise<string> {
+    let toParseMdStr = this.mdStr;
+
+    // 如果有 templateRender， 就把 md 原文渲染一遍
+    if (this.templateRender) {
+      toParseMdStr = (
+        await this.templateRender.render(
+          {
+            meta: this.metaData,
+          },
+          null,
+          toParseMdStr
+        )
+      ).content;
+    }
+
     return new Promise((resolve, reject) => {
-      marked(this.mdStr, { renderer: this.mdRerender }, (err, result) => {
+      marked(toParseMdStr, { renderer: this.mdRerender }, (err, result) => {
         if (err) return reject(err);
         resolve(result);
       });

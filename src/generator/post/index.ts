@@ -86,7 +86,6 @@ export class PostGenerator extends BaseGenerator {
           createDate: d.createDate,
           updateDate: d.updateDate,
           meta: d.meta,
-          raw: d.raw,
         }),
       };
     });

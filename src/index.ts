@@ -49,7 +49,9 @@ export class SiteGenerator {
     });
 
     const result = await Promise.all(
-      filePathList.map(p => createPage(p, path.relative(this.config.data.sourcePath, p)))
+      filePathList.map(p =>
+        createPage(p, path.relative(this.config.data.sourcePath, p), this.templateRender)
+      )
     );
 
     return result.filter(v => v);

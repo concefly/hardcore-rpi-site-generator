@@ -17,7 +17,6 @@ export class HomeGenerator extends BaseGenerator {
       renderPageData: new RenderPageData({
         title: '首页',
         content: '',
-        raw: '',
         updateDate: '',
         createDate: '',
       }),

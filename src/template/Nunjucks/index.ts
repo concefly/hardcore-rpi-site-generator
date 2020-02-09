@@ -18,12 +18,19 @@ export class NunjucksRender extends BaseTemplateRender {
     });
   }
 
-  async render(data: any) {
+  async render(data: any, tplPath = 'index.nj', tplStr?: string) {
     const content = await new Promise<string>((resolve, reject) => {
-      this.nunjucksEnv.render('index.nj', data, (err, res) => {
-        if (err) return reject(err);
-        resolve(res);
-      });
+      if (tplPath) {
+        this.nunjucksEnv.render(tplPath, data, (err, res) => {
+          if (err) return reject(err);
+          resolve(res);
+        });
+      } else {
+        this.nunjucksEnv.renderString(tplStr, data, (err, res) => {
+          if (err) return reject(err);
+          resolve(res);
+        });
+      }
     });
 
     return { content };

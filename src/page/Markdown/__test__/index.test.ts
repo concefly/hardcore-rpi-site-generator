@@ -1,5 +1,18 @@
 import test from 'ava';
 import { Markdown } from '..';
+import { BaseTemplateRender } from '../../../template/BaseTemplateRender';
+
+class MockTemplateRender extends BaseTemplateRender {
+  isTplExist() {
+    return true;
+  }
+
+  async render(data: any, _tplPath?: string, tplStr?: string): Promise<{ content: string }> {
+    const content = tplStr.replace(/__RENDER_TAG__/g, JSON.stringify(data, null, 2));
+
+    return { content };
+  }
+}
 
 const content = `
 ---
@@ -14,10 +27,14 @@ categories:
 
 # h1
 ## h2
+
+__RENDER_TAG__
 `;
 
 test('normal', async t => {
   const md = new Markdown(Buffer.from(content, 'utf-8'), '/', '/', { mime: 'text/plain' });
+
+  md.setTemplateRender(new MockTemplateRender('fake', 'dev'));
 
   t.deepEqual(await md.getTitle(), '1');
   t.deepEqual((await md.getCreateDate()).format('YYYY-MM-DD'), '2020-01-30');

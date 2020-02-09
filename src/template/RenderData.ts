@@ -11,9 +11,6 @@ export class RenderPageData {
       /** 页面内容（HTML） */
       content: string;
 
-      /** 页面原始信息（比如 md 原文） */
-      raw: string;
-
       createDate: string;
       updateDate: string;
 

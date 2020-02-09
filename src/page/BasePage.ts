@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as moment from 'moment';
 import * as _ from 'lodash';
+import { BaseTemplateRender } from '../template/BaseTemplateRender';
 
 export class BasePage {
   constructor(
@@ -39,6 +40,13 @@ export class BasePage {
 
 /** 文本类型 */
 export class BaseTextPage extends BasePage {
+  templateRender?: BaseTemplateRender;
+
+  setTemplateRender(render: BaseTemplateRender) {
+    this.templateRender = render;
+    return this;
+  }
+
   getCategories(): string[] {
     return [];
   }

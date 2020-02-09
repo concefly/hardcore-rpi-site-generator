@@ -3,8 +3,13 @@ import * as path from 'path';
 import { Markdown } from './Markdown';
 import { BasePage, BaseTextPage, BaseBinPage } from './BasePage';
 import { Magic, MAGIC_MIME_TYPE } from 'mmmagic';
+import { BaseTemplateRender } from '../template/BaseTemplateRender';
 
-export async function createPage(filePath: string, relPath: string): Promise<BasePage> {
+export async function createPage(
+  filePath: string,
+  relPath: string,
+  templateRender: BaseTemplateRender
+): Promise<BasePage> {
   if (!fs.existsSync(filePath)) return null;
 
   const extname = path.extname(filePath);
@@ -21,10 +26,12 @@ export async function createPage(filePath: string, relPath: string): Promise<Bas
   // 文本类型
   if (mime.match(/^text/)) {
     // markdown
-    if (extname === '.md') return new Markdown(raw, filePath, relPath, { mime });
+    if (extname === '.md') {
+      return new Markdown(raw, filePath, relPath, { mime }).setTemplateRender(templateRender);
+    }
 
     // 其他文本类型
-    return new BaseTextPage(raw, filePath, relPath, { mime });
+    return new BaseTextPage(raw, filePath, relPath, { mime }).setTemplateRender(templateRender);
   } else {
     // 二进制类型
     return new BaseBinPage(raw, filePath, relPath, { mime });
