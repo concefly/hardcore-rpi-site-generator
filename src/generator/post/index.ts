@@ -8,9 +8,10 @@ interface IPageSummaryItem {
   title: string;
   createDate: string;
   updateDate: string;
-  summary: string;
   tags: string[];
   categories: string[];
+  summary: string;
+  originMeta: any;
 }
 
 declare module '../BaseGenerator' {
@@ -56,10 +57,12 @@ export class PostGenerator extends BaseGenerator {
     const resultTags: IGenerateGlobalInfo['post']['tags'] = {};
 
     for (const { page } of sortedList) {
+      // 跳过非文本类型
       if (!(page instanceof BaseTextPage)) continue;
 
-      // 模拟 hexo 规则, 不在 _posts 目录下的直接跳过
-      if (!page.relativePath.includes('_posts')) continue;
+      // 跳过非 markdown 文档
+      const isMd = !!page.path.match(/\.md$/);
+      if (!isMd) continue;
 
       const id = page.getId();
       const title = page.getTitle();
@@ -81,7 +84,11 @@ export class PostGenerator extends BaseGenerator {
         updateDate,
       });
 
-      const postPath = `/post/${id}.html`;
+      const isInPostsDir = page.relativePath.split('/').some(p => p === '_posts');
+
+      const postPath = isInPostsDir
+        ? `/post/${id}.html`
+        : `/${page.relativePath}`.replace(/\/[^\/]*?$/, `/${id}.html`);
 
       resultRenderList.push({
         path: postPath,
@@ -106,6 +113,7 @@ export class PostGenerator extends BaseGenerator {
           .thru(s => striptags(s))
           .truncate({ length: 100 })
           .value(),
+        originMeta: meta,
       };
     }
 

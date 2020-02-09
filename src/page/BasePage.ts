@@ -15,7 +15,7 @@ export class BasePage {
   ) {}
 
   getId() {
-    return _.snakeCase(path.basename(this.path));
+    return _.snakeCase(path.basename(this.path).split('.')[0]);
   }
 
   getTitle() {

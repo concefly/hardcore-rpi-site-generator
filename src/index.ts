@@ -12,6 +12,8 @@ import { HomeGenerator } from './generator/home';
 
 export * from './config';
 
+export type IRenderLocals = ReturnType<RenderData['toLocals']>;
+
 export interface IExecResultItem {
   path: string;
   content: Buffer;
