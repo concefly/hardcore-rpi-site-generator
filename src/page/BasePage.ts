@@ -24,14 +24,15 @@ export class BasePage {
   }
 
   getCreateDate() {
-    if (!fs.existsSync(this.path)) return moment(0);
+    // utc false 是为了不同环境 ci 结果一致
+    if (!fs.existsSync(this.path)) return moment(0).utc(false);
 
     const s = fs.statSync(this.path);
     return moment(s.ctime);
   }
 
   getUpdateDate() {
-    if (!fs.existsSync(this.path)) return moment(0);
+    if (!fs.existsSync(this.path)) return moment(0).utc(false);
 
     const s = fs.statSync(this.path);
     return moment(s.mtime);
