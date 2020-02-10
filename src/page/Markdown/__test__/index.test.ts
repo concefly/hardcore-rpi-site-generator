@@ -23,6 +23,7 @@ tags: a
 categories:
   - a
   - b
+isDraft: true
 ---
 
 # h1
@@ -36,11 +37,12 @@ test('normal', async t => {
 
   md.setTemplateRender(new MockTemplateRender('fake', 'dev'));
 
-  t.deepEqual(await md.getTitle(), '1');
-  t.deepEqual((await md.getCreateDate()).format('YYYY-MM-DD'), '2020-01-30');
-  t.deepEqual((await md.getUpdateDate()).format('YYYY-MM-DD'), '2020-01-31');
-  t.deepEqual(await md.getTags(), ['a']);
-  t.deepEqual(await md.getCategories(), ['a', 'b']);
+  t.deepEqual(md.getTitle(), '1');
+  t.deepEqual(md.getCreateDate().format('YYYY-MM-DD'), '2020-01-30');
+  t.deepEqual(md.getUpdateDate().format('YYYY-MM-DD'), '2020-01-31');
+  t.deepEqual(md.getTags(), ['a']);
+  t.deepEqual(md.getCategories(), ['a', 'b']);
+  t.deepEqual(md.isDraft(), true);
 
   const html = await md.render();
   t.snapshot(html);

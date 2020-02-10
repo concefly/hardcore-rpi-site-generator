@@ -48,6 +48,10 @@ export class BaseTextPage extends BasePage {
     return this;
   }
 
+  isDraft(): boolean {
+    return false;
+  }
+
   getCategories(): string[] {
     return [];
   }

@@ -16,6 +16,9 @@ export async function getPageList(collection: Collection) {
         const isMd = d.page.path.endsWith('.md');
         if (!isMd) return false;
 
+        // 跳过 draft
+        if (d.page.isDraft()) return false;
+
         return true;
       })
       .sort((a, b) => {

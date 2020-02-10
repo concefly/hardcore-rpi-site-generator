@@ -17,6 +17,10 @@ export class Markdown extends BaseTextPage {
     return this.mdSplitData[1];
   }
 
+  isDraft() {
+    return this.metaData.isDraft || super.isDraft();
+  }
+
   getId() {
     return this.metaData.id || super.getId();
   }

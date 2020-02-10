@@ -33,6 +33,7 @@ export interface IMdMeta {
   updateDate?: moment.Moment;
   categories?: string[];
   tags?: string[];
+  isDraft?: boolean;
 
   /** 原始 meta 对象 */
   _originMeta: any;
@@ -49,6 +50,7 @@ export function getMetaFromRaw(metaStr: string): IMdMeta {
     ? _.compact(_.isArray(meta.categories) ? meta.categories : [meta.categories])
     : [];
   const tags: string[] = meta ? _.compact(_.isArray(meta.tags) ? meta.tags : [meta.tags]) : [];
+  const isDraft = meta ? meta.isDraft : false;
 
-  return { id, title, createDate, updateDate, categories, tags, _originMeta: meta };
+  return { id, title, createDate, updateDate, categories, tags, isDraft, _originMeta: meta };
 }
