@@ -19,7 +19,7 @@ test('PostGenerator:/_posts/a.md', async t => {
   const templateRender = new BaseTemplateRender('/', 'dev');
   const generator = new PostGenerator(collection, templateRender);
 
-  const result = await generator.generate();
+  const result = await generator.generateList();
 
   t.snapshot(result);
 });
@@ -62,7 +62,7 @@ createDate: 2
   const templateRender = new BaseTemplateRender('/', 'dev');
   const generator = new PostGenerator(collection, templateRender);
 
-  const result = await generator.generate();
+  const result = await generator.getGlobalInfo();
 
-  t.deepEqual(result.globalInfo.post.list, ['/post/2.html', '/post/1.html']);
+  t.deepEqual(result.data.post.list, ['/post/2.html', '/post/1.html']);
 });

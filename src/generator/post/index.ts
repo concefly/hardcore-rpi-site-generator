@@ -1,4 +1,9 @@
-import { BaseGenerator, GenerateResult } from '../BaseGenerator';
+import {
+  BaseGenerator,
+  GenerateList,
+  IRenderListTplItem,
+  GenerateGlobalInfo,
+} from '../BaseGenerator';
 import * as _ from 'lodash';
 import { getPageList } from './util';
 import { RenderPageData } from '../../template/RenderData';
@@ -14,7 +19,7 @@ interface IPageSummaryItem {
 }
 
 declare module '../BaseGenerator' {
-  interface IGenerateGlobalInfo {
+  interface IGenerateGlobalInfoData {
     post?: {
       map: {
         [path: string]: IPageSummaryItem;
@@ -36,13 +41,15 @@ declare module '../BaseGenerator' {
 export class PostGenerator extends BaseGenerator {
   readonly type = 'post';
 
-  async generate() {
+  private list = [];
+
+  async getGlobalInfo() {
     const list = await getPageList(this.collection);
-    const result = new GenerateResult(this.type);
+    this.list = list;
 
     const postList = list.filter(d => d.isInPostsDir);
 
-    result.globalInfo = {
+    return new GenerateGlobalInfo({
       post: {
         list: postList.map(d => d.postPath),
         tags: postList.reduce(
@@ -73,9 +80,11 @@ export class PostGenerator extends BaseGenerator {
           };
         }),
       },
-    };
+    });
+  }
 
-    result.renderList = list.map(d => {
+  async generateList() {
+    const renderList = this.list.map<IRenderListTplItem>(d => {
       return {
         renderType: 'tpl',
         path: d.postPath,
@@ -90,6 +99,6 @@ export class PostGenerator extends BaseGenerator {
       };
     });
 
-    return result;
+    return new GenerateList(this.type, renderList);
   }
 }

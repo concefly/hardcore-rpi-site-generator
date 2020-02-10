@@ -1,4 +1,4 @@
-import { BaseGenerator, GenerateResult } from '../BaseGenerator';
+import { BaseGenerator, GenerateList, GenerateGlobalInfo } from '../BaseGenerator';
 import { RenderPageData } from '../../template/RenderData';
 
 /**
@@ -7,8 +7,12 @@ import { RenderPageData } from '../../template/RenderData';
 export class HomeGenerator extends BaseGenerator {
   readonly type = 'home';
 
-  async generate() {
-    const result = new GenerateResult(this.type);
+  async getGlobalInfo() {
+    return new GenerateGlobalInfo({});
+  }
+
+  async generateList() {
+    const result = new GenerateList(this.type);
 
     result.renderList.push({
       path: '/index.html',

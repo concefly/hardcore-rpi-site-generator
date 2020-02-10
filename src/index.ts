@@ -4,11 +4,14 @@ import { createPage } from './page';
 import { Collection } from './collection';
 import { PostGenerator } from './generator/post';
 import { BaseTemplateRender } from './template/BaseTemplateRender';
-import { GenerateResult } from './generator/BaseGenerator';
+import { GenerateList } from './generator/BaseGenerator';
 import { Config } from './config';
 import { StaticGenerator } from './generator/static';
 import { RenderData } from './template/RenderData';
 import { HomeGenerator } from './generator/home';
+import * as _ from 'lodash';
+import { invokeAllGenerator } from './generator';
+import { TagGenerator } from './generator/tag';
 
 export * from './config';
 
@@ -17,7 +20,7 @@ export type IRenderLocals = ReturnType<RenderData['toLocals']>;
 export interface IExecResultItem {
   path: string;
   content: Buffer;
-  renderType: GenerateResult['renderList'][0]['renderType'];
+  renderType: GenerateList['renderList'][0]['renderType'];
   mime: string;
 }
 
@@ -31,7 +34,7 @@ export interface IExecResult {
 export class SiteGenerator {
   private config: Config;
   private templateRender: BaseTemplateRender;
-  private readonly generatorList = [PostGenerator, StaticGenerator, HomeGenerator];
+  private readonly generatorList = [PostGenerator, StaticGenerator, HomeGenerator, TagGenerator];
 
   constructor(configData: Config['data']) {
     this.config = new Config(configData);
@@ -70,8 +73,7 @@ export class SiteGenerator {
     const collection = await this.getCollection();
     const generators = this.generatorList.map(G => new G(collection, this.templateRender));
 
-    const grList = await Promise.all(generators.map(g => g.generate()));
-    GenerateResult.mergeAndUpdateGlobalInfo(grList);
+    const generateResult = await invokeAllGenerator(generators);
 
     const result: IExecResult = {
       depTplInfos: this.templateRender.getDepFileInfos(),
@@ -79,7 +81,7 @@ export class SiteGenerator {
       output: [],
     };
 
-    for (const gr of grList) {
+    for (const gr of generateResult.list) {
       for (const renderInfo of gr.renderList) {
         const resultItem: IExecResultItem = {
           path: renderInfo.path,
@@ -95,7 +97,7 @@ export class SiteGenerator {
           case 'tpl': {
             const locals = new RenderData(
               gr.type,
-              gr.globalInfo,
+              generateResult.globalInfo,
               renderInfo.renderPageData
             ).toLocals();
 

@@ -1,4 +1,9 @@
-import { BaseGenerator, GenerateResult } from '../BaseGenerator';
+import {
+  BaseGenerator,
+  GenerateList,
+  GenerateGlobalInfo,
+  IRenderListRawItem,
+} from '../BaseGenerator';
 
 /**
  * 静态文件生成器
@@ -9,9 +14,13 @@ import { BaseGenerator, GenerateResult } from '../BaseGenerator';
 export class StaticGenerator extends BaseGenerator {
   readonly type = 'media';
 
-  async generate() {
+  async getGlobalInfo() {
+    return new GenerateGlobalInfo({});
+  }
+
+  async generateList() {
     const list = this.collection.getList();
-    const result = new GenerateResult(this.type);
+    const renderList: IRenderListRawItem[] = [];
 
     for (const { page } of list) {
       if (page.path.endsWith('.md')) continue;
@@ -21,7 +30,7 @@ export class StaticGenerator extends BaseGenerator {
 
       const url = page.relativePath.startsWith('/') ? page.relativePath : '/' + page.relativePath;
 
-      result.renderList.push({
+      renderList.push({
         path: url,
         renderType: 'raw',
         buffer: page.raw,
@@ -29,6 +38,6 @@ export class StaticGenerator extends BaseGenerator {
       });
     }
 
-    return result;
+    return new GenerateList(this.type, renderList);
   }
 }

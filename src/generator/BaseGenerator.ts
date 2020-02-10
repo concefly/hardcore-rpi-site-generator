@@ -3,39 +3,42 @@ import { BaseTemplateRender } from '../template/BaseTemplateRender';
 import { RenderPageData } from '../template/RenderData';
 
 /** generator 上报的信息, 用于声明合并 */
-export interface IGenerateGlobalInfo {}
+export interface IGenerateGlobalInfoData {}
 
-export class GenerateResult {
+export interface IRenderListTplItem {
+  renderType: 'tpl';
+  path: string;
+  mime: string;
+  renderPageData: RenderPageData;
+}
+
+export interface IRenderListRawItem {
+  renderType: 'raw';
+  path: string;
+  mime: string;
+  buffer: Buffer;
+}
+
+/** 全局信息 */
+export class GenerateGlobalInfo {
   /** 浅层合并所有 globalInfo */
-  static mergeAndUpdateGlobalInfo(grList: GenerateResult[]) {
-    const mergedGlobalInfo = grList.reduce(
-      (re, gr) => ({ ...re, ...gr.globalInfo }),
-      {} as GenerateResult['globalInfo']
+  static mergeAll(globalList: GenerateGlobalInfo[]) {
+    const mergedGlobalInfo = globalList.reduce(
+      (re, gr) => ({ ...re, ...gr.data }),
+      {} as IGenerateGlobalInfoData
     );
 
-    grList.forEach(gr => {
-      gr.globalInfo = mergedGlobalInfo;
-    });
+    return new GenerateGlobalInfo(mergedGlobalInfo);
   }
 
+  constructor(readonly data: IGenerateGlobalInfoData) {}
+}
+
+/** 要生成的 list */
+export class GenerateList {
   constructor(
     readonly type: string,
-    /** generator 上报的信息 */
-    public globalInfo: Partial<IGenerateGlobalInfo> = {},
-    public renderList: (
-      | {
-          renderType: 'tpl';
-          path: string;
-          mime: string;
-          renderPageData: RenderPageData;
-        }
-      | {
-          renderType: 'raw';
-          path: string;
-          mime: string;
-          buffer: Buffer;
-        }
-    )[] = []
+    public renderList: (IRenderListTplItem | IRenderListRawItem)[] = []
   ) {}
 }
 
@@ -45,5 +48,13 @@ export abstract class BaseGenerator {
   /** 生成器标识(相互不同，主要用于 html 渲染识别) */
   abstract readonly type: string;
 
-  abstract async generate(): Promise<GenerateResult>;
+  abstract async getGlobalInfo(): Promise<GenerateGlobalInfo>;
+  abstract async generateList(globalInfo: GenerateGlobalInfo): Promise<GenerateList>;
+
+  async invoke() {
+    const globalInfo = await this.getGlobalInfo();
+    const list = await this.generateList(globalInfo);
+
+    return { globalInfo, list };
+  }
 }

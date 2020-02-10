@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import { GenerateResult } from '../generator/BaseGenerator';
+import { GenerateGlobalInfo } from '../generator/BaseGenerator';
 
 /** 页面数据 */
 export class RenderPageData {
@@ -24,7 +24,7 @@ export class RenderPageData {
 export class RenderData {
   constructor(
     private readonly generatorType: string,
-    private readonly globalInfo: GenerateResult['globalInfo'],
+    private readonly globalInfo: GenerateGlobalInfo,
     private readonly pageData: RenderPageData
   ) {}
 
@@ -33,7 +33,7 @@ export class RenderData {
       ctx: {
         type: this.generatorType,
         data: {
-          site: this.globalInfo,
+          site: this.globalInfo.data,
           page: this.pageData.data,
         },
       },
