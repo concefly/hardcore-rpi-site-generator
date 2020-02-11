@@ -8,7 +8,10 @@ class MockTemplateRender extends BaseTemplateRender {
   }
 
   async render(data: any, _tplPath?: string, tplStr?: string): Promise<{ content: string }> {
-    const content = tplStr.replace(/__RENDER_TAG__/g, JSON.stringify(data, null, 2));
+    const content = tplStr.replace(
+      /__RENDER_TAG__/g,
+      '<pre>\n' + JSON.stringify(data, null, 2) + '\n<pre>'
+    );
 
     return { content };
   }

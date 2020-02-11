@@ -42,7 +42,7 @@ export interface IMdMeta {
 export function getMetaFromRaw(metaStr: string): IMdMeta {
   const meta: any = yaml.safeLoad(metaStr);
 
-  const id = meta && meta.id && meta.id + '';
+  const id = meta?.id && meta.id + '';
   const title = meta && meta.title && meta.title + '';
   const createDate = meta?.createDate && moment(meta.createDate);
   const updateDate = meta?.updateDate && moment(meta.updateDate);

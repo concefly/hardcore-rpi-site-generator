@@ -20,7 +20,7 @@ export class BasePage {
   }
 
   getTitle() {
-    return path.basename(this.path);
+    return _.snakeCase(path.basename(this.path).split('.')[0]);
   }
 
   getCreateDate() {

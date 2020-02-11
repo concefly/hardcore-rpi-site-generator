@@ -7,7 +7,21 @@ import { BaseTextPage } from '../BasePage';
 export class Markdown extends BaseTextPage {
   private mdRerender = new MdRenderer();
   private mdSplitData = splitMetaStr(this.raw.toString('utf-8'));
-  private metaData: IMdMeta = getMetaFromRaw(this.metaStr);
+
+  /** 用户定义的 meta */
+  private userDefMetaData: IMdMeta = getMetaFromRaw(this.metaStr);
+
+  private metaData: IMdMeta = {
+    isDraft: this.userDefMetaData.isDraft,
+    id: this.userDefMetaData.id || super.getId(),
+    title: this.userDefMetaData.title || super.getTitle(),
+    createDate: this.userDefMetaData.createDate || super.getCreateDate(),
+    updateDate:
+      this.userDefMetaData.updateDate || this.userDefMetaData.createDate || super.getUpdateDate(),
+    categories: this.userDefMetaData.categories,
+    tags: this.userDefMetaData.tags,
+    _originMeta: this.userDefMetaData._originMeta,
+  };
 
   get metaStr() {
     return this.mdSplitData[0];
@@ -18,31 +32,31 @@ export class Markdown extends BaseTextPage {
   }
 
   isDraft() {
-    return this.metaData.isDraft || super.isDraft();
+    return this.metaData.isDraft;
   }
 
   getId() {
-    return this.metaData.id || super.getId();
+    return this.metaData.id;
   }
 
   getTitle() {
-    return this.metaData.title || super.getTitle();
+    return this.metaData.title;
   }
 
   getCreateDate() {
-    return this.metaData.createDate || super.getCreateDate();
+    return this.metaData.createDate;
   }
 
   getUpdateDate() {
-    return this.metaData.updateDate || this.metaData.createDate || super.getUpdateDate();
+    return this.metaData.updateDate;
   }
 
   getCategories() {
-    return this.metaData.categories || super.getCategories();
+    return this.metaData.categories;
   }
 
   getTags() {
-    return this.metaData.tags || super.getTags();
+    return this.metaData.tags;
   }
 
   getMeta() {
