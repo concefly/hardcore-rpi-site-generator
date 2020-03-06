@@ -43,8 +43,8 @@ export class PostGenerator extends BaseGenerator {
 
   private list = [];
 
-  async getGlobalInfo() {
-    const list = await getPageList(this.collection);
+  async getGlobalInfo(renderData?: any) {
+    const list = await getPageList(this.collection, renderData);
     this.list = list;
 
     const postList = list.filter(d => d.isInPostsDir);

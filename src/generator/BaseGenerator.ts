@@ -48,13 +48,9 @@ export abstract class BaseGenerator {
   /** 生成器标识(相互不同，主要用于 html 渲染识别) */
   abstract readonly type: string;
 
-  abstract async getGlobalInfo(): Promise<GenerateGlobalInfo>;
-  abstract async generateList(globalInfo: GenerateGlobalInfo): Promise<GenerateList>;
-
-  async invoke() {
-    const globalInfo = await this.getGlobalInfo();
-    const list = await this.generateList(globalInfo);
-
-    return { globalInfo, list };
-  }
+  abstract async getGlobalInfo(renderData?: any): Promise<GenerateGlobalInfo>;
+  abstract async generateList(
+    globalInfo: GenerateGlobalInfo,
+    renderData?: any
+  ): Promise<GenerateList>;
 }

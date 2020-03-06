@@ -47,6 +47,6 @@ test('normal', async t => {
   t.deepEqual(md.getCategories(), ['a', 'b']);
   t.deepEqual(md.isDraft(), true);
 
-  const html = await md.render();
+  const html = await md.render({ aaa: 'a' });
   t.snapshot(html);
 });

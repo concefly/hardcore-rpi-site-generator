@@ -73,7 +73,7 @@ export class SiteGenerator {
     const collection = await this.getCollection();
     const generators = this.generatorList.map(G => new G(collection, this.templateRender));
 
-    const generateResult = await invokeAllGenerator(generators);
+    const generateResult = await invokeAllGenerator(generators, opt?.extraRenderLocals);
 
     const result: IExecResult = {
       depTplInfos: this.templateRender.getDepFileInfos(),

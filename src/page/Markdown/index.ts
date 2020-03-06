@@ -68,7 +68,7 @@ export class Markdown extends BaseTextPage {
   }
 
   /** 渲染 html */
-  async render(): Promise<string> {
+  async render(renderData?: any): Promise<string> {
     let toParseMdStr = this.mdStr;
 
     // 如果有 templateRender， 就把 md 原文渲染一遍
@@ -77,6 +77,7 @@ export class Markdown extends BaseTextPage {
         await this.templateRender.render(
           {
             meta: this.metaData,
+            ...renderData,
           },
           null,
           toParseMdStr

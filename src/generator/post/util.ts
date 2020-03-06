@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import { BaseTextPage } from '../../page/BasePage';
 import * as striptags from 'striptags';
 
-export async function getPageList(collection: Collection) {
+export async function getPageList(collection: Collection, renderData: any) {
   const list = collection.getList();
 
   return Promise.all(
@@ -34,7 +34,7 @@ export async function getPageList(collection: Collection) {
         const createDate = d.page.getCreateDate().format('YYYY-MM-DD HH:mm:ss');
         const updateDate = d.page.getUpdateDate().format('YYYY-MM-DD HH:mm:ss');
 
-        const content = await d.page.render();
+        const content = await d.page.render(renderData);
 
         const isInPostsDir = d.page.relativePath.split('/').some(p => p === '_posts');
 

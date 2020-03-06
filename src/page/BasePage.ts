@@ -68,7 +68,7 @@ export class BaseTextPage extends BasePage {
     return this.raw.toString('utf-8');
   }
 
-  async render(): Promise<string> {
+  async render(_renderData?: any): Promise<string> {
     return this.raw.toString('utf-8');
   }
 }
